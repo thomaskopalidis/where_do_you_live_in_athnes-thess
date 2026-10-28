@@ -446,15 +446,15 @@ function carOf(a){
 const map = L.map("map", {zoomSnap:0.5, worldCopyJump:false});
 const dark = matchMedia("(prefers-color-scheme: dark)").matches;
 const ATTR_OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-const carto = L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark?"dark_all":"light_all"}/{z}/{x}/{y}{r}.png`,
-  {subdomains:"abcd", maxZoom:19, attribution: ATTR_OSM+' &copy; <a href="https://carto.com/attributions">CARTO</a>'}).addTo(map);
+const carto = L.tileLayer(`https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/${dark?"World_Dark_Gray_Base":"World_Light_Gray_Base"}/MapServer/tile/{z}/{y}/{x}`,
+  {maxZoom:19, maxNativeZoom:16, attribution: 'Tiles &copy; <a href="https://www.esri.com">Esri</a> &mdash; Esri, HERE, Garmin, '+ATTR_OSM}).addTo(map);
 // Αν δεν φορτώσουν πλακίδια (π.χ. χωρίς internet), δείχνουμε το περίγραμμα της Ελλάδας
 map.createPane("land").style.zIndex = 150;
 let landShown=false;
 carto.on("tileerror",()=>{ if(landShown) return; landShown=true;
   L.geoJSON(GREECE,{pane:"land",interactive:false,style:{fillColor:tok("land"),fillOpacity:1,color:tok("edge"),weight:1}}).addTo(map); });
 const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom:19, attribution: ATTR_OSM});
-L.control.layers({"Απλός χάρτης (CARTO)":carto, "OpenStreetMap":osm}, null, {position:"topright"}).addTo(map);
+L.control.layers({"Απλός χάρτης (Esri)":carto, "OpenStreetMap":osm}, null, {position:"topright"}).addTo(map);
 L.control.scale({imperial:false, position:"bottomright"}).addTo(map);
 map.createPane("lines").style.zIndex = 450;
 map.createPane("walk").style.zIndex = 440;
